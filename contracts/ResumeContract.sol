@@ -15,7 +15,7 @@ contract ResumeContract is Owned {
 		bytes32 dateOfBirth;
 		bytes32 socialUrl;
 		bytes32 currentPosition;
-		string localtion;
+		string location;
 	}
 
 	struct Experience{
@@ -35,15 +35,14 @@ contract ResumeContract is Owned {
 		bool isNotEmpty;
 	}
 
-	enum SkillLevel{
-		advanced,
-		medium,
-		basic
-	}
+	bytes32 constant SKILL_LEVEL_ADVANCED = "advanced";
+	bytes32 constant SKILL_LEVEL_BASIC = "basic";
+	bytes32 constant SKILL_LEVEL_MEDIUM = "medium";
+	bytes32 constant SKILL_LEVEL_NOTSET = "";
 
 	struct Skill{
 		bytes32 _skill;
-		SkillLevel level;
+		bytes32 level;
 		bool isNotEmpty;
 	}
 
@@ -59,35 +58,42 @@ contract ResumeContract is Owned {
 
 	mapping (address => ResumeModel) mResumeModels;
 
-	uint mVersion;
-	uint[] mAllVersion;
-
-
-	function getCurrentVersion() public view returns(uint){
-		return mVersion;
-	}
-
 	event personalInfoEvent(bytes32 name,
 													bytes32 phone,
 													bytes32 email,
 													bytes32 dateOfBirth,
 													bytes32 url,
 													bytes32 position,
-													string localtion);
+													string location);
 
-	function triggerPersonalInfoEvent(address _version) public {
+	function triggerGetPersonalInfoByEvent(address accountId) public {
 
-		if(!mResumeModels[_version].isNotEmpty){
+		if(!mResumeModels[accountId].isNotEmpty){
 			PersonalInfo memory info;
-			info = mResumeModels[_version].personalInfo;
+			info = mResumeModels[accountId].personalInfo;
 			emit personalInfoEvent( info.name,
 															info.phone,
 															info.email,
  															info.dateOfBirth,
  															info.socialUrl,
 															info.currentPosition,
-															info.localtion );
+															info.location );
 		}
+	}
+
+
+	function addPersonalInfo(
+														bytes32 name,
+														bytes32 phone,
+														bytes32 email,
+														bytes32 dateOfBirth,
+														bytes32 url,
+														bytes32 position,
+														string location ) public returns(bool){
+		PersonalInfo memory info = PersonalInfo(name, phone, email, dateOfBirth, url, position, location);
+		mResumeModels[msg.sender].personalInfo = info;
+		mResumeModels[msg.sender].isNotEmpty = true;
+		return true;
 	}
 
 	event experienceEvent(bytes32 startDate,
@@ -96,10 +102,10 @@ contract ResumeContract is Owned {
 												bytes32 position,
  												uint index);
 
-	function triggerExperienceEvent(uint _version) public  {
-		if(!mResumeModels[_version].isNotEmpty){
+	function triggerGetExperienceByEvent(address accountId) public  {
+		if(mResumeModels[accountId].isNotEmpty){
 				Experience[] memory expList;
-				expList = mResumeModels[_version].experiences;
+				expList = mResumeModels[accountId].experiences;
 
 				for(uint i=0; i < expList.length; i++){
 					Experience memory exp = expList[i];
@@ -110,7 +116,31 @@ contract ResumeContract is Owned {
 																i );
 				}
 			}
+	}
+
+	function addExperience(
+													bytes32 startDate,
+													bytes32 endDate,
+													bytes32 companyName,
+													bytes32 position ) public returns(bool){
+		Experience memory exp = Experience(startDate, endDate, companyName, position, true);
+		mResumeModels[msg.sender].experiences.push(exp);
+		return true;
+	}
+
+	function updateExperience(
+															bytes32 startDate,
+															bytes32 endDate,
+															bytes32 companyName,
+															bytes32 position,
+			 												uint index ) public returns(bool){
+		if(mResumeModels[msg.sender].experiences.length > index){
+			Experience memory exp = Experience(startDate, endDate, companyName, position, true);
+			mResumeModels[msg.sender].experiences[index] = exp;
+			return true;
 		}
+		return false;
+	}
 
 	event educationEvent(	bytes32 institute,
 												bytes32 degree,
@@ -119,10 +149,10 @@ contract ResumeContract is Owned {
 												bytes32 gpa,
  												uint index);
 
-	function triggerEducationEvent(uint _version) public  {
-		if(!mResumeModels[_version].isNotEmpty){
+	function triggerGetEducationByEvent(address accountId) public  {
+		if(mResumeModels[accountId].isNotEmpty){
 			Education[] memory eduList;
-			eduList = mResumeModels[_version].educations;
+			eduList = mResumeModels[accountId].educations;
 
 			for(uint i=0; i < eduList.length; i++){
 				Education memory edu = eduList[i];
@@ -136,33 +166,83 @@ contract ResumeContract is Owned {
 		}
 	}
 
+	function addEducation(
+													bytes32 institute,
+													bytes32 degree,
+													bytes32 faculty,
+													bytes32 major,
+													bytes32 gpa ) public returns(bool){
+		Education memory edu = Education(institute, degree, faculty, major, gpa, true);
+		mResumeModels[msg.sender].educations.push(edu);
+		return true;
+	}
+
+	function updateEducation(
+														bytes32 institute,
+														bytes32 degree,
+														bytes32 faculty,
+														bytes32 major,
+														bytes32 gpa,
+		 												uint index ) public returns(bool){
+		if(mResumeModels[msg.sender].educations.length > index){
+			Education memory edu = Education(institute, degree, faculty, major, gpa, true);
+			mResumeModels[msg.sender].educations[index] = edu;
+			return true;
+		}
+		return false;
+	}
+
 	event skillEvent(	bytes32 skill,
 										bytes32 level,
 										uint index );
 
-	function triggerSkillEvent(uint _version) public  {
-		if(!mResumeModels[_version].isNotEmpty){
+	function triggerGetSkillByEvent(address accountId) public  {
+		if(mResumeModels[accountId].isNotEmpty){
 			Skill[] memory skillList;
-			skillList = mResumeModels[_version].skills;
+			skillList = mResumeModels[accountId].skills;
 
 			for(uint i=0; i < skillList.length; i++){
 				Skill memory skill = skillList[i];
-				bytes32 lvl = "";
-				if(skill.level == SkillLevel.advanced){
-					lvl = "advanced";
-				}else if(skill.level == SkillLevel.medium){
-					lvl = "medium";
-				}else if(skill.level == SkillLevel.basic){
-					lvl = "basic";
-				}
-
-				emit skillEvent(skill._skill, lvl, i);
+				emit skillEvent(skill._skill, skill.level, i);
 			}
 		}
 	}
 
-	function setPersonalInfo() public {
+	function addSkill(
+											bytes32 skill,
+											bytes32 level ) public returns(bool){
+		Skill memory skillStruct;
+		if(	level == SKILL_LEVEL_ADVANCED ||
+				level == SKILL_LEVEL_MEDIUM ||
+				level == SKILL_LEVEL_BASIC ||
+				level == SKILL_LEVEL_ADVANCED ){
+			skillStruct = Skill(skill, level, true);
+		}else{
+			skillStruct = Skill(skill, "", true);
+		}
+		mResumeModels[msg.sender].skills.push(skillStruct);
+		return true;
+	}
 
+	function updateSkill(
+												bytes32 skill,
+												bytes32 level,
+												uint index  ) public returns(bool){
+		if(mResumeModels[msg.sender].skills.length > index){
+			Skill memory skillStruct;
+			if(	level == SKILL_LEVEL_ADVANCED ||
+					level == SKILL_LEVEL_MEDIUM ||
+					level == SKILL_LEVEL_BASIC ||
+					level == SKILL_LEVEL_ADVANCED ){
+				skillStruct = Skill(skill, level, true);
+			}else{
+				skillStruct = Skill(skill, "", true);
+			}
+
+			mResumeModels[msg.sender].skills[index] = skillStruct;
+			return true;
+		}
+		return false;
 	}
 
 }
