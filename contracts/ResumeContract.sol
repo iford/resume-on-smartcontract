@@ -9,6 +9,7 @@ contract ResumeContract is Owned {
 	}
 
 	struct PersonalInfo{
+		bytes32 picUrl;
 		bytes32 name;
 		bytes32 phone;
 		bytes32 email;
@@ -23,6 +24,7 @@ contract ResumeContract is Owned {
 		bytes32 endDate;
 		bytes32 companyName;
 		bytes32 position;
+		string expText;
 		bool isNotEmpty;
 	}
 
@@ -58,7 +60,21 @@ contract ResumeContract is Owned {
 
 	mapping (address => ResumeModel) mResumeModels;
 
-	event personalInfoEvent(bytes32 name,
+	event ResumeEmptyEvent();
+
+	function triggerGetResumeByEvent(address accountId) public {
+		if(!mResumeModels[accountId].isNotEmpty){
+			triggerGetPersonalInfoByEvent(accountId);
+			triggerGetExperienceByEvent(accountId);
+			triggerGetEducationByEvent(accountId);
+			triggerGetSkillByEvent(accountId);
+		}else{
+			emit ResumeEmptyEvent();
+		}
+	}
+
+	event personalInfoEvent(bytes32 picUrl,
+													bytes32 name,
 													bytes32 phone,
 													bytes32 email,
 													bytes32 dateOfBirth,
@@ -71,7 +87,8 @@ contract ResumeContract is Owned {
 		if(!mResumeModels[accountId].isNotEmpty){
 			PersonalInfo memory info;
 			info = mResumeModels[accountId].personalInfo;
-			emit personalInfoEvent( info.name,
+			emit personalInfoEvent(	info.picUrl,
+ 															info.name,
 															info.phone,
 															info.email,
  															info.dateOfBirth,
@@ -82,7 +99,7 @@ contract ResumeContract is Owned {
 	}
 
 
-	function addPersonalInfo(
+	function addPersonalInfo(	bytes32 picUrl,
 														bytes32 name,
 														bytes32 phone,
 														bytes32 email,
@@ -90,7 +107,9 @@ contract ResumeContract is Owned {
 														bytes32 url,
 														bytes32 position,
 														string location ) public returns(bool){
-		PersonalInfo memory info = PersonalInfo(name, phone, email, dateOfBirth, url, position, location);
+		PersonalInfo memory info = PersonalInfo(picUrl, name, phone, email,
+ 																						dateOfBirth, url, position,
+																						location);
 		mResumeModels[msg.sender].personalInfo = info;
 		mResumeModels[msg.sender].isNotEmpty = true;
 		return true;
@@ -100,6 +119,7 @@ contract ResumeContract is Owned {
 												bytes32 endDate,
 												bytes32 companyName,
 												bytes32 position,
+												string expText,
  												uint index);
 
 	function triggerGetExperienceByEvent(address accountId) public  {
@@ -112,7 +132,8 @@ contract ResumeContract is Owned {
 					emit experienceEvent(	exp.startDate,
 																exp.endDate,
 																exp.companyName,
-																exp.position ,
+																exp.position,
+																exp.expText,
 																i );
 				}
 			}
@@ -122,8 +143,10 @@ contract ResumeContract is Owned {
 													bytes32 startDate,
 													bytes32 endDate,
 													bytes32 companyName,
-													bytes32 position ) public returns(bool){
-		Experience memory exp = Experience(startDate, endDate, companyName, position, true);
+													bytes32 position,
+ 													string expText ) public returns(bool){
+		Experience memory exp = Experience(	startDate, endDate, companyName,
+ 																				position, expText, true);
 		mResumeModels[msg.sender].experiences.push(exp);
 		return true;
 	}
@@ -133,9 +156,11 @@ contract ResumeContract is Owned {
 															bytes32 endDate,
 															bytes32 companyName,
 															bytes32 position,
-			 												uint index ) public returns(bool){
+			 												uint index,
+ 															string expText ) public returns(bool){
 		if(mResumeModels[msg.sender].experiences.length > index){
-			Experience memory exp = Experience(startDate, endDate, companyName, position, true);
+			Experience memory exp = Experience(	startDate, endDate, companyName,
+ 																					position, expText, true);
 			mResumeModels[msg.sender].experiences[index] = exp;
 			return true;
 		}
@@ -172,7 +197,8 @@ contract ResumeContract is Owned {
 													bytes32 faculty,
 													bytes32 major,
 													bytes32 gpa ) public returns(bool){
-		Education memory edu = Education(institute, degree, faculty, major, gpa, true);
+		Education memory edu = Education(	institute, degree, faculty,
+ 																			major, gpa, true);
 		mResumeModels[msg.sender].educations.push(edu);
 		return true;
 	}
@@ -185,7 +211,8 @@ contract ResumeContract is Owned {
 														bytes32 gpa,
 		 												uint index ) public returns(bool){
 		if(mResumeModels[msg.sender].educations.length > index){
-			Education memory edu = Education(institute, degree, faculty, major, gpa, true);
+			Education memory edu = Education(	institute, degree, faculty,
+ 																				major, gpa, true);
 			mResumeModels[msg.sender].educations[index] = edu;
 			return true;
 		}
