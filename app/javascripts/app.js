@@ -1,15 +1,16 @@
 // Import the page's CSS. Webpack will know what to do with it.
 import "../stylesheets/app.css";
 import "bootstrap/dist/css/bootstrap.css";
+// import "mustache/mustache.min.js";
 
 // Import libraries we need.
 import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract'
+import { default as mustache} from 'mustache';
 
 // Import our contract artifacts and turn them into usable abstractions.
 import resume_artifacts from '../../build/contracts/ResumeContract.json'
 
-// MetaCoin is our usable abstraction, which we'll use through the code below.
 var resume = contract(resume_artifacts);
 
 // The following code is simple to show off interacting with your contracts.
@@ -38,7 +39,22 @@ window.App = {
       accounts = accs;
       account = accounts[0];
 
-       this.refreshResumeInfo();
+      App.refreshResumeInfo();
+      App.eventPersonalInfoListener();
+      // App.addInfo();
+
+    });
+  },
+
+  addInfo: function() {
+    resume.deployed().then(function(instance) {
+      return instance.addPersonalInfo("https://goo.gl/X2LQwx", "Ford Weera","0843694750","Ford@gmail.com","1-7-1988","github.com/iford","Mobile Dev","Rama2 Bkk",{from: accounts[0], gas: 3000000});
+    }).then(function(value) {
+      console.log("addInfo:"+value);
+      App.refreshResumeInfo();
+    }).catch(function(e) {
+      console.log(e);
+
     });
   },
 
@@ -53,17 +69,86 @@ window.App = {
     });
   },
 
+  createTemplate: function(templateId, parentId, data) {
+    var template = document.getElementById(templateId).innerHTML;
+    mustache.parse(template);
+    var rendered = mustache.render(template, data);
+    var parentElement = document.getElementById(parentId);
+    parentElement.insertAdjacentHTML("afterend",rendered);
+
+  },
+
   eventPersonalInfoListener: function(){
     resume.deployed().then(function(instance){
         var event =  instance.personalInfoEvent({}, {fromBlock:0, toBlock:'latest'});
         event.watch(function(error, result){
           if(!error){
+            console.log("personalInfo",result);
+            document.getElementById("profilePic").src = web3.toAscii( result.args.picUrl );
+            document.getElementById("name").innerHTML = web3.toAscii( result.args.name );
+            document.getElementById("phone").innerHTML = web3.hexToAscii( web3.toHex(result.args.phone) );
+            document.getElementById("email").innerHTML = web3.toAscii(result.args.email);
+            document.getElementById("dateOfBirth").innerHTML = web3.toAscii( result.args.dateOfBirth);
+            document.getElementById("socialUrl").innerHTML = web3.toAscii( result.args.url);
+            document.getElementById("currentPosition").innerHTML = web3.toAscii( result.args.position );
+            document.getElementById("address").innerHTML =  result.args.location;
 
           }
         });
     });
+  },
 
-  }
+  eventExperienceListener: function(){
+        var expArr;
+        resume.deployed().then(function(instance){
+            var event =  instance.experienceEvent({}, {fromBlock:0, toBlock:'latest'});
+            event.watch(function(error, result){
+              if(!error){
+
+              }
+            });
+     });
+
+  },
+
+  eventEducationListener: function(){
+        var eduArr;
+        resume.deployed().then(function(instance){
+            var event =  instance.educationEvent({}, {fromBlock:0, toBlock:'latest'});
+            event.watch(function(error, result){
+              if(!error){
+
+              }
+            });
+     });
+
+  },
+
+  eventSkillEventListener: function(){
+        var skillArr;
+        resume.deployed().then(function(instance){
+            var event =  instance.skillEvent({}, {fromBlock:0, toBlock:'latest'});
+            event.watch(function(error, result){
+              if(!error){
+
+              }
+            });
+     });
+
+  },
+
+  eventInterestEventListener: function(){
+        var interestArr;
+        resume.deployed().then(function(instance){
+            var event =  instance.skillEvent({}, {fromBlock:0, toBlock:'latest'});
+            event.watch(function(error, result){
+              if(!error){
+
+              }
+            });
+     });
+
+  },
 
 };
 

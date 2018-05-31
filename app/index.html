@@ -4,15 +4,182 @@
   <title>Resume On blockchain</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
+  <script id="skillTemplate" type="x-tmpl-mustache">
+        {{#arr}}
+        <div class="row" >
+
+          <hr>
+          <div class="col-4">
+
+          </div>
+          <div class="col-3">
+            <h5 class="text-left" id="_skill">{{_skill}}</h5>
+          </div>
+
+          <div class="col-5">
+            <h5 class="text-left" id="level">{{level}}</h5>
+          </div>
+
+        </div>
+        {{/arr}}
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-  <div class="container">
-    <section  id="personalInfoSection">
-  			<div class="row">
 
-  			</div>
-    </section>
+  <section id="personalInfoSection">
+    <div class="container">
+      <div class="row">
+       <div class="col">
+         <img id="profilePic" class="img-circle">
+       </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <h2  class="display-5" id="name">Weera Kaewouan</h2>
+          <br />
+          <h2 class="display-5" id="currentPosition">Programmer</h2>
+          <br />
+          <br />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <h4 class="text-md-right text-left"> Phone : <span id="phone">0843694750</span> </h4>
+          <h4 class="text-md-right text-left"> Email : <span id="email">ford@gmail.com</span> </h4>
+          <h4 class="text-md-right text-left"> Date of birth : <span id="dateOfBirth">1/07/1988</span> </h4>
+
+        </div>
+
+        <div class="col">
+          <h4 class="text-left"> Social : <span id="socialUrl">www.github.com/iford</span> </h4>
+          <h4 class="text-left"> Address : </h4>
+          <p class="text-left" id="address">20/46 Smart Condo Rama2, Khwaeng Samae Dam, Khet Bang Khun Thian, Bangkok 10150</p>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+ <section id="experienceSection">
+
+   <div class="container">
+     <br />
+     <div class="row">
+      <div class="col">
+        <h2  class="display-5 section-header" >Experience</h2>
+        <hr>
+        <br />
+      </div>
+
+     </div>
+
+     <div class="row" id="experienceRow">
+       <div class="col-4">
+         <h4 class="text-left"> <span id="startDate">2012/04</span> - <span id="endDate">2014/08</span> </h4>
+       </div>
+
+       <div class="col-8">
+         <h4 class="text-left" id="position">Flash Programmer</h4>
+         <h5 class="text-left" id="company"> 7 zeed.co.,ltd </h5>
+         <h5 class="text-left" id="expText">- Develop Flash Game with ActionScript 3.0</h5>
+       </div>
+
+     </div>
+
+   </div>
+ </section>
+
+ <section id="educationSection">
+
+   <div class="container">
+     <br />
+     <div class="row">
+      <div class="col">
+        <h2  class="display-5 section-header" >Education</h2>
+        <hr>
+        <br />
+      </div>
+
+     </div>
+
+     <div class="row" id="educationRow">
+       <div class="col-4">
+         <h4 class="text-left"> <span id="startDate">2012/04</span> - <span id="endDate">2014/08</span> </h4>
+       </div>
+
+       <div class="col-8">
+         <h4 class="text-left" id="institute">Rajamangala Uiversity</h4>
+         <h5 class="text-left" id="degree">Bachelor degree </h5>
+         <h5 class="text-left" id="faculty">Faculty of Mass Communication Technology</h5>
+         <h5 class="text-left" >Major <span id="major"> Multimedia Technology</span></h5>
+         <h5 class="text-left" >GPA <span id="gpa"> 3.44 </span> </h5>
+       </div>
+
+     </div>
+
+   </div>
+ </section>
+
+<section id="skillsSection">
+
+  <div class="container" id="skillsContainer">
+    <br />
+    <div class="row">
+     <div class="col">
+       <h2  class="display-5 section-header" >Skills</h2>
+       <hr>
+       <br />
+     </div>
+
+    </div>
+
+    <!-- <div class="row" >
+      <hr>
+      <div class="col-4">
+
+      </div>
+      <div class="col-3">
+        <h5 class="text-left" id="_skill">{{_skill}}</h5>
+      </div>
+
+      <div class="col-5">
+        <h5 class="text-left" id="level">{{level}}</h5>
+      </div>
+
+    </div> -->
+
   </div>
+</section>
+
+<section id="interestSection">
+
+  <div class="container">
+    <br />
+    <div class="row">
+     <div class="col">
+       <h2  class="display-5 section-header" >Interests</h2>
+       <hr>
+       <br />
+     </div>
+
+    </div>
+
+    <div class="row" id="interestRow">
+      <hr>
+      <div class="col-4">
+
+      </div>
+      <div class="col-8">
+        <h5 class="text-left" id="interest">Cryptocurrency Investment</h5>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
 </body>
 </html>

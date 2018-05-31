@@ -39,14 +39,43 @@ h3 {
   font-size: 24px;
 }
 
-.black {
-  color: black;
+hr {
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
 }
 
-#balance {
+#personalInfoSection{
+  background-color: #40749F;
+  background-size: cover;
+  color: white;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+#profilePic{
+  width: 200px;
+  height: 200px;
+}
+
+.black {
   color: black;
 }
 
 .hint {
   color: #666;
+}
+
+.section-header{
+  color: #40749F
+}
+
+.testColor {
+  background-color: #FAEBD7;
 }
