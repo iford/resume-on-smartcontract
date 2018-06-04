@@ -4,8 +4,49 @@
   <title>Resume On blockchain</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
+
+  <script id="experienceTemplate" type="x-tmpl-mustache">
+        {{#experienceList}}
+         <div class="row" id="experienceRow">
+           <div class="col-4">
+             <h5 class="text-right"> <span id="startDate">{{startDate}}</span> to <span id="endDate">{{endDate}}</span> </h5>
+           </div>
+
+           <div class="col-8">
+             <h4 class="text-left" id="position">{{position}}</h4>
+             <h5 class="text-left" id="company">{{company}}</h5>
+             <h5 class="text-left" id="expText">{{expText}}</h5>
+           </div>
+
+         </div>
+        <br />
+        <br />
+        {{/experienceList}}
+  </script>
+
+  <script id="educationTemplate" type="x-tmpl-mustache">
+        {{#educationList}}
+         <div class="row" id="educationRow">
+           <div class="col-4">
+             <h5 class="text-right"> <span id="startDate">{{startDate}}</span> - <span id="endDate">{{endDate}}</span> </h5>
+           </div>
+
+           <div class="col-8">
+             <h4 class="text-left" id="institute">{{institute}}</h4>
+             <h5 class="text-left" id="degree">{{degree}}</h5>
+             <h5 class="text-left" id="faculty">{{faculty}}</h5>
+             <h5 class="text-left" >Major <span id="major">{{major}}</span></h5>
+             <h5 class="text-left" ><span id="gpa"> {{gpa}} </span> </h5>
+           </div>
+
+         </div>
+        <br />
+        <br />
+        {{/educationList}}
+  </script>
+
   <script id="skillTemplate" type="x-tmpl-mustache">
-        {{#arr}}
+        {{#skillList}}
         <div class="row" >
 
           <hr>
@@ -21,14 +62,43 @@
           </div>
 
         </div>
-        {{/arr}}
+        {{/skillList}}
   </script>
+
+  <script id="interestTemplate" type="x-tmpl-mustache">
+        {{#interestList}}
+        <div class="row" id="interestRow">
+          <hr>
+          <div class="col-4">
+
+          </div>
+          <div class="col-8">
+            <h5 class="text-left" id="interest">{{interest}}</h5>
+          </div>
+
+        </div>
+        {{/interestList}}
+  </script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
+
 <body>
+
+<section id="addInfoSection">
+  <div class="container">
+    <div class="row justify-content-md-center">
+     <div class="col">
+       <button type="button" name="button" class="btn btn-default mx-auto d-block" onclick="App.testAddInfo();">Add data</button>
+     </div>
+    </div>
+    <br />
+  </div>
+</section>
 
   <section id="personalInfoSection">
     <div class="container">
+      <br />
       <div class="row">
        <div class="col">
          <img id="profilePic" class="img-circle">
@@ -37,9 +107,9 @@
 
       <div class="row">
         <div class="col">
-          <h2  class="display-5" id="name">Weera Kaewouan</h2>
+          <h2  class="display-5" id="name"></h2>
           <br />
-          <h2 class="display-5" id="currentPosition">Programmer</h2>
+          <h2 class="display-5" id="currentPosition"></h2>
           <br />
           <br />
         </div>
@@ -47,16 +117,16 @@
 
       <div class="row">
         <div class="col">
-          <h4 class="text-md-right text-left"> Phone : <span id="phone">0843694750</span> </h4>
-          <h4 class="text-md-right text-left"> Email : <span id="email">ford@gmail.com</span> </h4>
-          <h4 class="text-md-right text-left"> Date of birth : <span id="dateOfBirth">1/07/1988</span> </h4>
+          <h4 class="text-md-right text-left"> Phone : <span id="phone"></span> </h4>
+          <h4 class="text-md-right text-left"> Email : <span id="email"></span> </h4>
+          <h4 class="text-md-right text-left"> Date of birth : <span id="dateOfBirth"></span> </h4>
 
         </div>
 
         <div class="col">
-          <h4 class="text-left"> Social : <span id="socialUrl">www.github.com/iford</span> </h4>
+          <h4 class="text-left"> Social : <span id="socialUrl"></span> </h4>
           <h4 class="text-left"> Address : </h4>
-          <p class="text-left" id="address">20/46 Smart Condo Rama2, Khwaeng Samae Dam, Khet Bang Khun Thian, Bangkok 10150</p>
+          <p class="text-left" id="address"></p>
 
         </div>
       </div>
@@ -65,27 +135,14 @@
 
  <section id="experienceSection">
 
-   <div class="container">
+   <div class="container" id="experienceContainer">
      <br />
      <div class="row">
       <div class="col">
         <h2  class="display-5 section-header" >Experience</h2>
-        <hr>
         <br />
+        <hr>
       </div>
-
-     </div>
-
-     <div class="row" id="experienceRow">
-       <div class="col-4">
-         <h4 class="text-left"> <span id="startDate">2012/04</span> - <span id="endDate">2014/08</span> </h4>
-       </div>
-
-       <div class="col-8">
-         <h4 class="text-left" id="position">Flash Programmer</h4>
-         <h5 class="text-left" id="company"> 7 zeed.co.,ltd </h5>
-         <h5 class="text-left" id="expText">- Develop Flash Game with ActionScript 3.0</h5>
-       </div>
 
      </div>
 
@@ -94,7 +151,7 @@
 
  <section id="educationSection">
 
-   <div class="container">
+   <div class="container" id="educationContainer">
      <br />
      <div class="row">
       <div class="col">
@@ -102,21 +159,6 @@
         <hr>
         <br />
       </div>
-
-     </div>
-
-     <div class="row" id="educationRow">
-       <div class="col-4">
-         <h4 class="text-left"> <span id="startDate">2012/04</span> - <span id="endDate">2014/08</span> </h4>
-       </div>
-
-       <div class="col-8">
-         <h4 class="text-left" id="institute">Rajamangala Uiversity</h4>
-         <h5 class="text-left" id="degree">Bachelor degree </h5>
-         <h5 class="text-left" id="faculty">Faculty of Mass Communication Technology</h5>
-         <h5 class="text-left" >Major <span id="major"> Multimedia Technology</span></h5>
-         <h5 class="text-left" >GPA <span id="gpa"> 3.44 </span> </h5>
-       </div>
 
      </div>
 
@@ -136,27 +178,12 @@
 
     </div>
 
-    <!-- <div class="row" >
-      <hr>
-      <div class="col-4">
-
-      </div>
-      <div class="col-3">
-        <h5 class="text-left" id="_skill">{{_skill}}</h5>
-      </div>
-
-      <div class="col-5">
-        <h5 class="text-left" id="level">{{level}}</h5>
-      </div>
-
-    </div> -->
-
   </div>
 </section>
 
 <section id="interestSection">
 
-  <div class="container">
+  <div class="container" id="interestsContainer">
     <br />
     <div class="row">
      <div class="col">

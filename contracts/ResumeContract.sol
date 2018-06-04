@@ -76,6 +76,7 @@ contract ResumeContract is Owned {
 												bytes32 companyName,
 												bytes32 position,
 												string expText,
+												uint count,
  												uint index);
 
 	event educationEvent(	bytes32 startDate,
@@ -85,13 +86,16 @@ contract ResumeContract is Owned {
 												bytes32 faculty,
 												bytes32 major,
 												bytes32 gpa,
+												uint count,
  												uint index);
 
 	event skillEvent(	bytes32 skill,
 										bytes32 level,
+										uint count,
 										uint index );
 
 	event interestEvent(	bytes32 interest,
+												uint count,
 												uint index );
 
 	event resumeEmptyEvent();
@@ -265,6 +269,7 @@ contract ResumeContract is Owned {
 																exp.companyName,
 																exp.position,
 																exp.expText,
+																expList.length,
 																i );
 				}
 			}
@@ -285,6 +290,7 @@ contract ResumeContract is Owned {
 														edu.faculty,
 														edu.major,
 														edu.gpa,
+														eduList.length,
 														i );
 			}
 		}
@@ -297,7 +303,7 @@ contract ResumeContract is Owned {
 
 			for(uint i=0; i < skillList.length; i++){
 				Skill memory skill = skillList[i];
-				emit skillEvent(skill._skill, skill.level, i);
+				emit skillEvent(skill._skill, skill.level, skillList.length, i);
 			}
 		}
 	}
@@ -308,7 +314,7 @@ contract ResumeContract is Owned {
 			interestList = mResumeModels[accountId].interests;
 
 			for(uint i=0; i < interestList.length; i++){
-				emit interestEvent(interestList[i], i);
+				emit interestEvent(interestList[i], interestList.length, i);
 			}
 		}
 	}
